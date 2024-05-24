@@ -8,6 +8,8 @@
 import customtkinter as ctk
 from tkinter import PhotoImage
 
+ctk.set_appearance_mode("system")
+
 root = ctk.CTk()
 
 root.title("Super Fly")
