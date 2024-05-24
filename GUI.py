@@ -8,11 +8,10 @@
 import customtkinter as ctk
 
 root = ctk.CTk()
-root.title("")
+root.title("Super Fly")
+root.geometry("500x600")
+root.config(bg="dark red")
+root.resizable(0, 0)
+
 root.mainloop()
-
-ventana = ctk.CTk()
-
-ventana.mainloop()
-
 
