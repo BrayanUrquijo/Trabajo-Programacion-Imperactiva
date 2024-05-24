@@ -1,3 +1,3 @@
 import customtkinter as ctk
-vos mas 
+# vos mas 
 # si perro hp
