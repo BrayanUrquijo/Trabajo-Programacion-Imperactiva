@@ -1,3 +1,5 @@
 import customtkinter as ctk
-# vos mas 
-# si perro hp
+
+ventana = ctk.CTk()
+
+ventana.mainloop()
