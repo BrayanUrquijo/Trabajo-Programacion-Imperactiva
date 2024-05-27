@@ -13,7 +13,7 @@ ctk.set_appearance_mode("system")
 root = ctk.CTk()
 
 root.title("Super Fly")
-root.geometry("500x600+350+150")
+root.geometry("500x600+350+250")
 root.resizable(0, 0)
 root.iconbitmap("SuperFly.ico")
 
