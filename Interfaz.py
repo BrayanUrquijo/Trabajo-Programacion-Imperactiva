@@ -176,8 +176,6 @@ def abrir_nueva_ventana():
     personas_combobox.current(0)  # Set default value to 1
     personas_combobox.pack(side="right", padx=5, pady=5)
 
-
-
     # Crear el marco para el formulario de búsqueda
     marco_busqueda = tk.Frame(nueva_ventana, bg='white', bd=2, relief=tk.GROOVE)
     marco_busqueda.pack(pady=20, padx=20, fill='x')
@@ -210,20 +208,17 @@ def abrir_nueva_ventana():
     origen_var.trace_add("write", actualizar_origen)
     destino_var.trace_add("write", actualizar_destino)
 
-
     # Campos de entrada para Origen y Destino
     lbl_origen = tk.Label(marco_busqueda, text="Origen:", bg='white')
     lbl_origen.grid(row=0, column=0, padx=10, pady=5)
     entrada_origen = ttk.Combobox(marco_busqueda, values=list(set(ciudad_origen)), textvariable=origen_var)
     entrada_origen.grid(row=0, column=1, padx=10, pady=5)
 
-
     lbl_destino = tk.Label(marco_busqueda, text="Destino:", bg='white')
     lbl_destino.grid(row=0, column=2, padx=10, pady=5)
     entrada_destino = ttk.Combobox(marco_busqueda, values=list(set(ciudad_destino)), textvariable=destino_var)
     entrada_destino.grid(row=0, column=3, padx=10, pady=5)
 
-    
     # Selector de fecha
 
     lbl_fecha = tk.Label(marco_busqueda, text="Ida:", bg='white')
