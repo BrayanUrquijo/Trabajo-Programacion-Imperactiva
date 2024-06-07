@@ -8,7 +8,81 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import ttk
-import io 
+
+# Abrir Datos_Vuelos_finales
+
+with open("Datos_Vuelos_Finales", "r") as datos:
+    datos_save = datos.read()
+
+# Convertir la cadena en una lista de líneas
+
+data = datos_save.splitlines()
+
+# Crear una matriz vacía
+
+matriz = []
+
+# Crear una lista vacía para cada 
+
+iteracion = []
+
+# Crear listas vacías para cada tipo de clase
+
+vuelo = []
+fecha = []
+hora_salida = []
+hora_llegada = []
+valor_min = []
+valor_medio = []
+valor_max = []
+ciudad_origen = []
+ciudad_destino = []
+
+# Iterar sobre cada línea en los datos
+
+for i in range(len(data)):
+    linea_1 = data[i]
+    iteracion.append(linea_1)
+
+# Bucle Para Limpiar La Lista De Iteración
+
+for i in range(len(iteracion)):
+    iteracion[i] = iteracion[i].replace(',', '').replace('[', '').replace(']', '').replace("'", "")
+
+# Bucle Para Separar La Lista De Iteración En Una Matriz y Corregir Santa Marta
+
+for i in range(len(iteracion)):
+    matriz.append(iteracion[i].split())
+    if matriz[i][7] == "Santa":
+        matriz[i][7] = "Santa Marta"
+        matriz[i].pop(8)
+    elif matriz[i][8] == "Santa":
+        matriz[i][8] = "San Marta"
+        matriz[i].pop(9)
+
+# print(matriz[0])
+
+# Separamos El Contenido De La Matriz En Listas Para Obtener Cada Tipo De Clase En Diferentes Listas
+
+for i in range(len(matriz)):
+    if matriz[i][0]:
+        vuelo.append(matriz[i][0])
+    if matriz[i][1]:
+        fecha.append(matriz[i][1])
+    if matriz[i][2]:
+        hora_salida.append(matriz[i][2])
+    if matriz[i][3]:
+        hora_llegada.append(matriz[i][3])
+    if matriz[i][4]:
+        valor_min.append(matriz[i][4])
+    if matriz[i][5]:
+        valor_medio.append(matriz[i][5])
+    if matriz[i][6]:
+        valor_max.append(matriz[i][6])
+    if matriz[i][7]:
+        ciudad_origen.append(matriz[i][7])
+    if matriz[i][8]:
+        ciudad_destino.append(matriz[i][8])
 
 def abrir_ventana_seleccion_asientos():
     # Crear la ventana de selección de asientos
@@ -108,21 +182,53 @@ def abrir_nueva_ventana():
     marco_busqueda = tk.Frame(nueva_ventana, bg='white', bd=2, relief=tk.GROOVE)
     marco_busqueda.pack(pady=20, padx=20, fill='x')
 
+    # Variables de control
+    origen_var = tk.StringVar()
+    destino_var = tk.StringVar()
+
+    # Funciones de devolución de llamada para actualizar las selecciones
+    def actualizar_origen(*args):
+        origen_seleccionado = origen_var.get()
+        actualizar_fechas()
+
+    def actualizar_destino(*args):
+        destino_seleccionado = destino_var.get()
+        actualizar_fechas()
+
+    # Función para actualizar las fechas disponibles
+    def actualizar_fechas():
+        origen_seleccionado = origen_var.get()
+        destino_seleccionado = destino_var.get()
+        fechas_disponibles = []
+        for i in range(len(matriz)):
+            if ciudad_origen[i] == origen_seleccionado and ciudad_destino[i] == destino_seleccionado:
+                fechas_disponibles.append(fecha[i])
+        # Actualizar el selector de fecha con las nuevas fechas disponibles
+        entrada_fecha['values'] = list(set(fechas_disponibles))
+
+    # Establecer las funciones de devolución de llamada
+    origen_var.trace_add("write", actualizar_origen)
+    destino_var.trace_add("write", actualizar_destino)
+
+
     # Campos de entrada para Origen y Destino
     lbl_origen = tk.Label(marco_busqueda, text="Origen:", bg='white')
     lbl_origen.grid(row=0, column=0, padx=10, pady=5)
-    entrada_origen = ttk.Combobox(marco_busqueda, values=["Bogotá (BOG)", "Medellín (MDE)", "Cali (CLO)", "Cartagena (CTG)", "Barranquilla (BAQ)"])
+    entrada_origen = ttk.Combobox(marco_busqueda, values=list(set(ciudad_origen)), textvariable=origen_var)
     entrada_origen.grid(row=0, column=1, padx=10, pady=5)
+
 
     lbl_destino = tk.Label(marco_busqueda, text="Destino:", bg='white')
     lbl_destino.grid(row=0, column=2, padx=10, pady=5)
-    entrada_destino = ttk.Combobox(marco_busqueda, values=["Buenos Aires (EZE)", "Santiago (SCL)", "Lima (LIM)", "Ciudad de México (MEX)", "Madrid (MAD)"])
+    entrada_destino = ttk.Combobox(marco_busqueda, values=list(set(ciudad_destino)), textvariable=destino_var)
     entrada_destino.grid(row=0, column=3, padx=10, pady=5)
 
+    
     # Selector de fecha
+
     lbl_fecha = tk.Label(marco_busqueda, text="Ida:", bg='white')
     lbl_fecha.grid(row=0, column=4, padx=10, pady=5)
-    entrada_fecha = ttk.Combobox(marco_busqueda, values=["9/06/2024", "10/06/2024", "11/06/2024", "12/06/2024", "13/06/2024"])
+    entrada_fecha = ttk.Combobox(marco_busqueda)
     entrada_fecha.grid(row=0, column=5, padx=10, pady=5)
 
     # Botón de búsqueda

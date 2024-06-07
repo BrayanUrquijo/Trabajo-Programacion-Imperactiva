@@ -76,6 +76,25 @@ for i in range(len(matriz)):
     if matriz[i][8]:
         ciudad_destino.append(matriz[i][8])
 
+# for para encontrar en una linea de la matriz la ciudad de origen y destino seleccionada por el usuario y mandar la fecha
+
+ciudad_origen_seleccionada = "Cartagena"
+ciudad_destino_seleccionada = "Cali"
+
+for i in range(len(matriz)):
+    if ciudad_origen[i] == ciudad_origen_seleccionada and ciudad_destino[i] == ciudad_destino_seleccionada:
+        print("--------------------------")
+        print(f"Vuelo: {vuelo[i]}")
+        print(f"Fecha: {fecha[i]}")
+        print(f"Hora de Salida: {hora_salida[i]}")
+        print(f"Hora de Llegada: {hora_llegada[i]}")
+        print(f"Valor Minimo: {valor_min[i]}")
+        print(f"Valor Medio: {valor_medio[i]}")
+        print(f"Valor Maximo: {valor_max[i]}")
+        print(f"Ciudad Origen: {ciudad_origen[i]}")
+        print(f"Ciudad Destino: {ciudad_destino[i]}")
+
+
 # print("--------------------------")
 # print(Tb.tabulate(vuelo))
 # print("--------------------------")
