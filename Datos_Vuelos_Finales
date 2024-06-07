@@ -1,4 +1,3 @@
-# Vuelo, Fecha,     Hora Salida, Hora Llegada, Valor Min, Valor Medio, Valor Max, Ciudad Origen, Ciudad Destino
 ['Z328', '2024-06-5', '08:13:00', '10:35:00', 244463, 538669, 1666594, 'Santa Marta', 'Bogota']
 ['X633', '2024-06-6', '02:55:00', '05:58:00', 483669, 640186, 4023518, 'Santa Marta', 'Cartagena']
 ['G611', '2024-06-12', '16:50:00', '17:07:00', 295876, 915371, 2684321, 'Medellin', 'Santa Marta']

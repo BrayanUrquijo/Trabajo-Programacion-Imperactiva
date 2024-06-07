@@ -8,6 +8,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from tkinter import ttk
+import io 
 
 def abrir_ventana_seleccion_asientos():
     # Crear la ventana de selección de asientos
