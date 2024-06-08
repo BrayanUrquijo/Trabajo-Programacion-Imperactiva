@@ -87,8 +87,9 @@ for i in range(len(matriz)):
 def abrir_ventana_seleccion_asientos():
     # Crear la ventana de selección de asientos
     ventana_asientos = tk.Toplevel(root)
-    ventana_asientos.title("Sky-Voyage")
+    ventana_asientos.title("SuperFly - Selección de Asientos")
     ventana_asientos.geometry("800x600")
+    ventana_asientos.iconbitmap("SuperFly.ico")
 
     # Título de la selección de asientos
     lbl_seleccion_asientos = tk.Label(ventana_asientos, text="Selección de Asientos", font=("Arial", 16))
@@ -147,8 +148,9 @@ def boton_tipo_viaje():
 def abrir_nueva_ventana():
     # Crear la nueva ventana
     nueva_ventana = tk.Toplevel(root)
-    nueva_ventana.title("Sky-Voyage")
+    nueva_ventana.title("SuperFly - Búsqueda de Vuelos")
     nueva_ventana.geometry("800x400")
+    nueva_ventana.iconbitmap("SuperFly.ico")
 
     # Crear el encabezado
     encabezado = tk.Frame(nueva_ventana, bg="royalblue")
@@ -246,10 +248,10 @@ def guardar_datos():
 
 # Ventana principal
 root = tk.Tk()
-root.title("Sky-Voyage")
+root.title("SuperFly - Login")
 root.geometry("300x300")
 root.configure(bg='white')
-
+root.iconbitmap("SuperFly.ico")
 # Se crea un lienzo para los componentes (botones, títulos, etc)
 marco = tk.Frame(root, bg='white')
 marco.pack(pady=30)
