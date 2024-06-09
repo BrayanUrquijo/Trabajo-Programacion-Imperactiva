@@ -6,8 +6,16 @@
 
 # Proyecto Final
 import tkinter as tk
+from tkinter.messagebox import *
 from PIL import Image, ImageTk
 from tkinter import ttk
+
+# Abrir Y Leer La Ultima Línea De datos_personas.txt
+
+def leer_ultima_linea(nombre_archivo):
+    with open(nombre_archivo, 'r') as file:
+        lineas = file.readlines()
+    return lineas[-1]
 
 # Abrir Datos_Vuelos_finales
 
@@ -114,15 +122,31 @@ def abrir_ventana_seleccion_asientos():
     # Crear los botones para los asientos (72 asientos, 12 filas x 6 columnas)
     num_filas = 12
     num_columnas = 6
+    
 
     for r in range(num_filas):
+        posicion_user = []
         lbl = tk.Label(marco_asientos, text=str(r+1))
         lbl.grid(row=r+1, column=0)
         for c in range(num_columnas):
+            filas_asiento = ["A", "B", "C", "D", "E", "F"]
             clase = "Aluminio" if r >= 8 else "Diamante" if r >= 4 else "Premium"
             color = "slateblue" if clase == "Premium" else "mediumpurple" if clase == "Diamante" else "darkslateblue"
-            btn = tk.Button(marco_asientos, bg=color, width=2, height=1)
+            btn = tk.Button(marco_asientos, bg=color, width=2, height=1, command=lambda posicion = [r+1, filas_asiento[c]]: posicion_user.append(posicion))
             btn.grid(row=r+1, column=c+1, padx=2, pady=2)
+    
+    # Función para guardar la posición del asiento seleccionado
+
+    def guardar_posicion():
+        ultima_linea = int(leer_ultima_linea("datos_personas.txt"))
+        print(len(posicion_user))
+        if len(posicion_user) == ultima_linea:
+            with open('datos_asientos.txt', 'a') as file:
+                for posicion in posicion_user:
+                    file.write(f"{posicion}\n")
+        elif posicion_user != ultima_linea:
+            showwarning(title="Error", message=f"Por favor seleccione los asientos para {ultima_linea} pasajeros")
+            posicion_user.clear()
 
     # Crear las etiquetas para las clases
     lbl_premium = tk.Label(marco_clases, text="Premium", bg="slateblue", width=10)
@@ -135,7 +159,7 @@ def abrir_ventana_seleccion_asientos():
     lbl_aluminio.pack(pady=5)
 
     # Botón de selección
-    btn_seleccionar = tk.Button(ventana_asientos, text="Seleccionar", bg="darkviolet", fg="white")
+    btn_seleccionar = tk.Button(ventana_asientos, text="Seleccionar", bg="darkviolet", fg="white", command=guardar_posicion)
     btn_seleccionar.pack(pady=20)
 
 def boton_tipo_viaje():
@@ -157,7 +181,7 @@ def abrir_nueva_ventana():
     encabezado.pack(side="top", fill="x")
 
     # Título de la aplicación
-    titulo = tk.Label(encabezado, text="Sky-Voyage", bg="royalblue", fg="white", font=("Arial", 24))
+    titulo = tk.Label(encabezado, text="SuperFly", bg="royalblue", fg="white", font=("Arial", 24))
     titulo.pack(pady=10)
 
     # Crear la barra de navegación
@@ -178,58 +202,67 @@ def abrir_nueva_ventana():
     personas_combobox.current(0)  # Set default value to 1
     personas_combobox.pack(side="right", padx=5, pady=5)
 
+    def guardar_personas():
+        personas = personas_combobox.get()
+        with open('datos_personas.txt', 'a') as file:
+            file.write(f"{personas}\n")
+        
+    def abrir_ventana_seleccion_asientos_y_guardar_datos():
+        guardar_personas()
+        abrir_ventana_seleccion_asientos()
+
     # Crear el marco para el formulario de búsqueda
     marco_busqueda = tk.Frame(nueva_ventana, bg='white', bd=2, relief=tk.GROOVE)
     marco_busqueda.pack(pady=20, padx=20, fill='x')
 
-    # Variables de control
-    origen_var = tk.StringVar()
-    destino_var = tk.StringVar()
+    # # Variables de control
+    # origen_var = tk.StringVar()
+    # destino_var = tk.StringVar()
 
-    # Funciones de devolución de llamada para actualizar las selecciones
-    def actualizar_origen(*args):
-        origen_seleccionado = origen_var.get()
-        actualizar_fechas()
+    # # Funciones de devolución de llamada para actualizar las selecciones
+    # def actualizar_origen(*args):
+    #     origen_seleccionado = origen_var.get()
+    #     actualizar_fechas()
 
-    def actualizar_destino(*args):
-        destino_seleccionado = destino_var.get()
-        actualizar_fechas()
+    # def actualizar_destino(*args):
+    #     destino_seleccionado = destino_var.get()
+    #     actualizar_fechas()
 
-    # Función para actualizar las fechas disponibles
-    def actualizar_fechas():
-        origen_seleccionado = origen_var.get()
-        destino_seleccionado = destino_var.get()
-        fechas_disponibles = []
-        for i in range(len(matriz)):
-            if ciudad_origen[i] == origen_seleccionado and ciudad_destino[i] == destino_seleccionado:
-                fechas_disponibles.append(fecha[i])
-        # Actualizar el selector de fecha con las nuevas fechas disponibles
-        entrada_fecha['values'] = list(set(fechas_disponibles))
+    # # Función para actualizar las fechas disponibles
+    # def actualizar_fechas():
+    #     origen_seleccionado = origen_var.get()
+    #     destino_seleccionado = destino_var.get()
+    #     fechas_disponibles = []
+    #     for i in range(len(matriz)):
+    #         if ciudad_origen[i] == origen_seleccionado and ciudad_destino[i] == destino_seleccionado:
+    #             fechas_disponibles.append(fecha[i])
+        # # Actualizar el selector de fecha con las nuevas fechas disponibles
+        # entrada_fecha['values'] = list(set(fechas_disponibles))
 
-    # Establecer las funciones de devolución de llamada
-    origen_var.trace_add("write", actualizar_origen)
-    destino_var.trace_add("write", actualizar_destino)
+    # # Establecer las funciones de devolución de llamada
+    # origen_var.trace_add("write", actualizar_origen)
+    # destino_var.trace_add("write", actualizar_destino)
 
     # Campos de entrada para Origen y Destino
     lbl_origen = tk.Label(marco_busqueda, text="Origen:", bg='white')
     lbl_origen.grid(row=0, column=0, padx=10, pady=5)
-    entrada_origen = ttk.Combobox(marco_busqueda, values=list(set(ciudad_origen)), textvariable=origen_var)
+    entrada_origen = ttk.Combobox(marco_busqueda, values=list(set(ciudad_origen)))#, textvariable=origen_var)
     entrada_origen.grid(row=0, column=1, padx=10, pady=5)
 
     lbl_destino = tk.Label(marco_busqueda, text="Destino:", bg='white')
     lbl_destino.grid(row=0, column=2, padx=10, pady=5)
-    entrada_destino = ttk.Combobox(marco_busqueda, values=list(set(ciudad_destino)), textvariable=destino_var)
+    entrada_destino = ttk.Combobox(marco_busqueda, values=list(set(ciudad_destino)))#, textvariable=destino_var)
     entrada_destino.grid(row=0, column=3, padx=10, pady=5)
 
     # Selector de fecha
 
     lbl_fecha = tk.Label(marco_busqueda, text="Ida:", bg='white')
     lbl_fecha.grid(row=0, column=4, padx=10, pady=5)
-    entrada_fecha = ttk.Combobox(marco_busqueda)
+    entrada_fecha = ttk.Entry(marco_busqueda)
     entrada_fecha.grid(row=0, column=5, padx=10, pady=5)
 
     # Botón de búsqueda
-    btn_buscar = tk.Button(marco_busqueda, text="Buscar", bg="darkviolet", fg="white", command=abrir_ventana_seleccion_asientos)
+    btn_buscar = tk.Button(marco_busqueda, text="Buscar", bg="darkviolet", fg="white", command=abrir_ventana_seleccion_asientos_y_guardar_datos)
     btn_buscar.grid(row=1, columnspan=6, pady=20)
 
 # Función para guardar los datos ingresados por el usuario
@@ -286,4 +319,3 @@ checkin_button.grid(row=3, columnspan=2, pady=10)
 # Iniciar el bucle principal de la aplicación
 if __name__ == "__main__":
  root.mainloop()
-
