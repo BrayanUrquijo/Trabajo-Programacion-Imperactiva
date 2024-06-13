@@ -1,5 +1,5 @@
 # Integrante1: Brayan Urquijo – 202459407
-# Integrante2: Jhorian Jaramillo – 202459537
+# Integrante2: Jhorain Jaramillo – 202459537
 # Integrante2: Valentina Betancourt Caicedo – 202459411
 # Docente: Luis Germán Toro Pareja
 
@@ -12,6 +12,8 @@ from tkinter import ttk
 from datetime import datetime
 import random
 import string
+import re
+    
 
 # Ventana principal
 root = tk.Tk()
@@ -363,6 +365,7 @@ def guardar_datos_registro():
     asistencia_us = entrada_asistencia.get()
     correo_us = entrada_correo.get()
     numero_celular_us = entrada_numero_celular.get()
+    ventana_codigo_checkin()
     if len(nombre_us and apellido_us and genero_us and nacionalidad_us and numero_documento_us and fecha_nacimiento_us and asistencia_us and correo_us and numero_celular_us) != 0:
         with open('datos_registro.txt', 'a') as file:
             file.write(f"{nombre_us},{apellido_us},{genero_us},{nacionalidad_us},{numero_documento_us},{fecha_nacimiento_us},{asistencia_us},{correo_us},{numero_celular_us}\n")
@@ -702,6 +705,22 @@ def nueva_ventana_registro():
     entrada_correo = tk.Entry(marco_registro)
     entrada_correo.grid(row=3, column=3, padx=10, pady=5)
 
+    # Funcion que valida el correo ingresado si es correcto deja acceder a guardar_datos_registro
+
+    def validar():
+        telefono = entrada_numero_celular.get()
+        if telefono.isdigit() and len(telefono) == 10:
+            showwarning(title="Número Válido", message="Número válido")
+            guardar_datos_registro()
+            if re.match(r"[^@]+@[^@]+\.[^@]+", correo):
+                showwarning(title="Correo Válido", message="Correo válido")
+                guardar_datos_registro()
+            else:
+                showwarning(title="Correo Inválido", message="Correo inválido")
+        else:
+            showwarning(title="Número Inválido", message="Número inválido")
+        correo = entrada_correo.get()
+
     # Número Celular
     lbl_numero_celular = tk.Label(marco_registro, text="Número Celular:", bg="ghost white")
     lbl_numero_celular.grid(row=4, column=0, padx=10, pady=5)
@@ -709,7 +728,7 @@ def nueva_ventana_registro():
     entrada_numero_celular.grid(row=4, column=1, padx=10, pady=5)
 
     # Botón de registro
-    continuar_button = tk.Button(marco_registro, text="Continuar", bg='red2', fg='black', command= lambda : (guardar_datos_registro()))
+    continuar_button = tk.Button(marco_registro, text="Continuar", bg='red2', fg='black', command= lambda : (validar()))
     continuar_button.grid(row=5, columnspan=4, pady=10)
 
 # Funcion Para leer La Datos Personas Y Elegir La Ultima Posicion En Lista
@@ -956,6 +975,24 @@ def generar_codigo_checkin():
         file.write(f"{nombre},{codigo}\n")
     return codigo
 
+# Funcion para crear una ventana emergente
+
+def ventana_codigo_checkin():
+    # Crear una nueva ventana emergente
+    ventana_codigo = tk.Toplevel(root)
+    ventana_codigo.title("Código de Check-in")
+    ventana_codigo.geometry("300x200")
+
+    # Obtener el código de check-in generado
+    codigo_checkin = generar_codigo_checkin()
+
+    # Crear una etiqueta para mostrar el código de check-in
+    codigo_label = tk.Label(ventana_codigo, text=f"Código de Check-in: {codigo_checkin}", font=("Arial", 12))
+    codigo_label.pack(pady=20)
+
+    # Crear un botón para cerrar la ventana emergente
+    cerrar_button = tk.Button(ventana_codigo, text="Cerrar", command=ventana_codigo.destroy)
+    cerrar_button.pack()
 
 # Iniciar el bucle principal de la aplicación
 if __name__ == "__main__":
