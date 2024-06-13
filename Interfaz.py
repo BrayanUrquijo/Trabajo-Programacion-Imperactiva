@@ -1,6 +1,6 @@
 # Integrante1: Brayan Urquijo – 202459407
 # Integrante2: Jhorain Jaramillo – código2
-# Integrante2: PrimerNombre SegundoApellido – código3
+# Integrante2: Valentina Betancourt Caicedo – 202459411
 # Docente: Luis Germán Toro Pareja
 # Número de grupo:
 
