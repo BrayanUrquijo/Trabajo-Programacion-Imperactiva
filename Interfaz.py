@@ -11,6 +11,40 @@ from PIL import Image, ImageTk
 from tkinter import ttk
 from datetime import datetime
 import random
+import string
+
+# Ventana principal
+root = tk.Tk()
+root.title("SuperFly - Login")
+root.geometry("300x300")
+root.configure(bg="white")
+root.iconbitmap("SuperFly.ico")
+# Se crea un lienzo para los componentes (botones, títulos, etc)
+marco = tk.Frame(root, bg="white")
+marco.pack(pady=30)
+
+
+imagen_original = Image.open("Logo.png")
+imagen_redimensionada = imagen_original.resize((100, 100))  # Cambia el tamaño a 100x100 píxeles
+Logo = ImageTk.PhotoImage(imagen_redimensionada)
+
+# Agregar la imagen redimensionada
+logo_label = tk.Label(marco, image=Logo, bg="white")
+logo_label.grid(row=0, columnspan=2, pady=10)
+
+# Crear las etiquetas y entradas para "Código"
+codigo_label = tk.Label(marco, text="Código", bg="white")
+codigo_label.grid(row=1, column=0, padx=10, pady=5)
+
+codigo_entry = tk.Entry(marco)
+codigo_entry.grid(row=1, column=1, padx=10, pady=5)
+
+# Crear las etiquetas y entradas para "Apellido"
+apellido_label = tk.Label(marco, text="Apellido", bg="white")
+apellido_label.grid(row=2, column=0, padx=10, pady=5)
+
+apellido_entry = tk.Entry(marco)
+apellido_entry.grid(row=2, column=1, padx=10, pady=5)
 
 # Abrir Y Leer La Ultima Línea De datos_personas.txt
 
@@ -69,8 +103,6 @@ for i in range(len(iteracion)):
     elif matriz[i][8] == "Santa":
         matriz[i][8] = "San Marta"
         matriz[i].pop(9)
-
-# print(matriz[0])
 
 # Separamos El Contenido De La Matriz En Listas Para Obtener Cada Tipo De Clase En Diferentes Listas
 
@@ -276,44 +308,7 @@ def guardar_datos():
     global codigo, apellido
     codigo = codigo_entry.get()
     apellido = apellido_entry.get()
-    # Ejemplo de guardar en un archivo de texto
-    # with open('datos_checkin.txt', 'a') as file:
-    #     file.write(f"{codigo},{apellido}\n")
-    # Llamar a la función para filtrar si esta en la base de datos
     usuario_base_datos()
-
-# Ventana principal
-root = tk.Tk()
-root.title("SuperFly - Login")
-root.geometry("300x300")
-root.configure(bg="white")
-root.iconbitmap("SuperFly.ico")
-# Se crea un lienzo para los componentes (botones, títulos, etc)
-marco = tk.Frame(root, bg="white")
-marco.pack(pady=30)
-
-
-imagen_original = Image.open("Logo.png")
-imagen_redimensionada = imagen_original.resize((100, 100))  # Cambia el tamaño a 100x100 píxeles
-Logo = ImageTk.PhotoImage(imagen_redimensionada)
-
-# Agregar la imagen redimensionada
-logo_label = tk.Label(marco, image=Logo, bg="white")
-logo_label.grid(row=0, columnspan=2, pady=10)
-
-# Crear las etiquetas y entradas para "Código"
-codigo_label = tk.Label(marco, text="Código", bg="white")
-codigo_label.grid(row=1, column=0, padx=10, pady=5)
-
-codigo_entry = tk.Entry(marco)
-codigo_entry.grid(row=1, column=1, padx=10, pady=5)
-
-# Crear las etiquetas y entradas para "Apellido"
-apellido_label = tk.Label(marco, text="Apellido", bg="white")
-apellido_label.grid(row=2, column=0, padx=10, pady=5)
-
-apellido_entry = tk.Entry(marco)
-apellido_entry.grid(row=2, column=1, padx=10, pady=5)
 
 # Si el usuario no esta en la base de datos, se le pedirá que se registre
 
@@ -337,7 +332,7 @@ checkin_button.grid(row=3, columnspan=2, pady=10)
 # Funcion para mostrar la hora de los vuelos filtrados
 
 def vuelos_a_mostrar():
-    global hora_s, hora_l, valor_mi, valor_me, valor_ma, origen_seleccionado, destino_seleccionado
+    global hora_s, hora_l, valor_mi, valor_me, valor_ma, origen_seleccionado, destino_seleccionado, codigo
     origen_seleccionado = origen_var.get()
     destino_seleccionado = destino_var.get() 
     hora_s = []
@@ -345,6 +340,7 @@ def vuelos_a_mostrar():
     valor_mi = []
     valor_me = []
     valor_ma = []
+    codigo = []
 
     for i in range(len(matriz)):
         if ciudad_origen[i] == origen_seleccionado and ciudad_destino[i] == destino_seleccionado and fecha[i] == entrada_fecha.get():
@@ -353,6 +349,7 @@ def vuelos_a_mostrar():
             valor_mi.append(valor_min[i])
             valor_me.append(valor_medio[i])
             valor_ma.append(valor_max[i])
+            codigo.append(vuelo[i])
 
 # Función para guardar los datos de registro
 
@@ -465,11 +462,6 @@ def elegir_asiento_aluminio():
             posicion = [i+1, filas_asiento[e]]
             sillas_aluminio.append(posicion)
 
-    # Leer el archivo y eliminar las posiciones ya ocupadas
-    with open('datos_asientos.txt', 'r') as file:
-        asientos_ocupados = [line.strip() for line in file]
-    sillas_aluminio = [silla for silla in sillas_aluminio if str(silla) not in asientos_ocupados]
-
     # Elegir una Silla Al Azar
     silla_elegida = random.choice(sillas_aluminio)
 
@@ -489,11 +481,6 @@ def elegir_asiento_diamante():
             posicion = [i+1, filas_asiento[e]]
             sillas_diamante.append(posicion)
 
-    # Leer el archivo y eliminar las posiciones ya ocupadas
-    with open('datos_asientos.txt', 'r') as file:
-        asientos_ocupados = [line.strip() for line in file]
-    sillas_diamante = [silla for silla in sillas_diamante if str(silla) not in asientos_ocupados]
-
     # Elegir una silla al azar
     silla_elegida = random.choice(sillas_diamante)
 
@@ -507,8 +494,7 @@ valor_paquete = int
 # Funcion para calcular el precio total a pagar con el vuelo seleccionado y el número de personas
 
 def calcular_total_pagar():
-    personas = int(leer_datos_personas())
-    total_pagar = valor_paquete * personas
+    total_pagar = valor_paquete * int(leer_datos_personas())
     return total_pagar
 
 # Funcion Actualizar El Precio Para El Paquete De Vuelo Aluminio
@@ -536,7 +522,9 @@ def actualizar_precio_premium():
 
 def nueva_ventana_compra():
     ventana_seleccion_asientos.withdraw()
-    global paquete_text, texto_vuelo, ventana_compra
+    global paquete_text, texto_vuelo, ventana_compra, origen, destino
+    origen = origen_seleccionado
+    destino = destino_seleccionado
     texto_vuelo = f"{origen_seleccionado} - {destino_seleccionado}"
     ventana_compra = tk.Toplevel(root)
     ventana_compra.title("SuperFly - Registro De Compra")
@@ -643,16 +631,16 @@ def abrir_ventana_seleccion_paquete():
 # Funcion para abrir ventana de registro
 
 def nueva_ventana_registro():
+    global nueva_ventana_r, entrada_primer_nombre, entrada_primer_apellido, entrada_genero, entrada_nacionalidad, entrada_numero_documento, entrada_fecha_nacimiento, entrada_asistencia, entrada_correo, entrada_numero_celular
     marco_registro = tk.Frame(root)  
     marco_registro.pack()
-    nueva_ventana = tk.Toplevel(root)
-    nueva_ventana.title("Superfly - Registro de Usuario")
-    nueva_ventana.geometry("800x600")
-    nueva_ventana.iconbitmap("SuperFly.ico")
-    global entrada_primer_nombre, entrada_primer_apellido, entrada_genero, entrada_nacionalidad, entrada_numero_documento, entrada_fecha_nacimiento, entrada_asistencia, entrada_correo, entrada_numero_celular
-
+    nueva_ventana_r = tk.Toplevel(root)
+    nueva_ventana_r.title("Superfly - Registro de Usuario")
+    nueva_ventana_r.geometry("800x600")
+    nueva_ventana_r.iconbitmap("SuperFly.ico")
+    
     # Crear el encabezado
-    encabezado = tk.Frame(nueva_ventana, bg="red2")
+    encabezado = tk.Frame(nueva_ventana_r, bg="red2")
     encabezado.pack(side="top", fill="x")
 
     # Título de la aplicación
@@ -660,7 +648,7 @@ def nueva_ventana_registro():
     titulo.pack(pady=10)
 
     # Crear el marco para el formulario de registro
-    marco_registro = tk.Frame(nueva_ventana, bg="ghost white", bd=2, relief=tk.GROOVE)
+    marco_registro = tk.Frame(nueva_ventana_r, bg="ghost white", bd=2, relief=tk.GROOVE)
     marco_registro.pack(pady=20, padx=20, fill='x')
     
     # Actualizar la ventana para que cada dato que se debe pedir sean botones y que al presionarlos sea una entrada para poder ingresar el dato
@@ -735,16 +723,16 @@ def leer_datos_personas():
 
 def nueva_ventana_tarjeta():
     ventana_compra.withdraw()
-    global marco_tarjeta
+    global nueva_ventana_t
     marco_tarjeta = tk.Frame(root)  
     marco_tarjeta.pack()
-    nueva_ventana = tk.Toplevel(root)
-    nueva_ventana.title("SuperFly - Pago Con Tarjeta")
-    nueva_ventana.geometry("800x600")
-    nueva_ventana.iconbitmap("SuperFly.ico")
+    nueva_ventana_t = tk.Toplevel(root)
+    nueva_ventana_t.title("SuperFly - Pago Con Tarjeta")
+    nueva_ventana_t.geometry("800x600")
+    nueva_ventana_t.iconbitmap("SuperFly.ico")
 
     # Crear el encabezado
-    encabezado = tk.Frame(nueva_ventana, bg="red2")
+    encabezado = tk.Frame(nueva_ventana_t, bg="red2")
     encabezado.pack(side="top", fill="x")
 
     # Título de la aplicación
@@ -752,12 +740,12 @@ def nueva_ventana_tarjeta():
     titulo.pack(pady=10)
 
     # Título del marco
-    titulo_tarjeta = tk.Label(nueva_ventana, text="Datos de la Tarjeta", font=("Arial", 24))
+    titulo_tarjeta = tk.Label(nueva_ventana_t, text="Datos de la Tarjeta", font=("Arial", 24))
     titulo_tarjeta.pack(pady=10)
 
 
     # Crear el marco para el formulario de registro
-    marco_tarjeta = tk.Frame(nueva_ventana, bg='ghost white', bd=2, relief=tk.GROOVE)
+    marco_tarjeta = tk.Frame(nueva_ventana_t, bg='ghost white', bd=2, relief=tk.GROOVE)
     marco_tarjeta.pack(pady=20, padx=20, fill='x')
     
     # Tipo de tarjeta
@@ -806,7 +794,7 @@ def nueva_ventana_tarjeta():
 # Crear una ventana de resumen de compra que contiene el vuelo seleccionado por el usuario en la ventana de "mostrar_vuelos", el número de personas y el valor total a pagar
 
 def ventana_resumen_compra(texto_vuelo, leer_datos_personas, calcular_total_pagar):
-    marco_tarjeta.withdraw()
+    nueva_ventana_t.withdraw()
     # Crear la ventana de resumen de compra
     global ventana_resumen
     ventana_resumen = tk.Toplevel(root)
@@ -846,22 +834,56 @@ def ventana_resumen_compra(texto_vuelo, leer_datos_personas, calcular_total_paga
     total_entry.grid(row=2, column=1, padx=10, pady=5, sticky="w")
 
     # Botón de pagar
-    pagar_button = tk.Button(marco_resumen, text="Pagar", bg='red3', fg='black', command= crear_ventana_tiquete)
+    pagar_button = tk.Button(marco_resumen, text="Pagar", bg='red3', fg='black', command= lambda : (crear_ventana_tiquete()))
     pagar_button.grid(row=3, columnspan=2, pady=10)
+
+# Funcion abrir datos_registro y volverlo una matriz para tomar la primera posición en columna y la ultima posicion en fila
+
+def abrir_datos_registro():
+    with open('datos_registro.txt', 'r') as file:
+        datos_registro = [line.strip().split(",") for line in file]
+    return datos_registro
+
+# Funcion tomar la primera posicion de la columna ultima posicion en la fila
+
+def nombre_registro():
+    datos_registro = abrir_datos_registro()
+    return datos_registro[-1][0]
+
+# Funcion tomar la segunda posicion de la columna ultima posicion en la fila
+
+def apellido_registro():
+    datos_registro = abrir_datos_registro()
+    return datos_registro[-1][1]
+
+# Combinar estos dos datos en una sola variable
+
+def nombre_completo():
+    nombre = nombre_registro()
+    apellido = apellido_registro()
+    return f"{nombre} {apellido}"
+
 
 # Funcion para crear la ventana del tiquete
 
-def crear_ventana_tiquete(nombre, origen, numero_vuelo, fecha, destino, hora): 
+def crear_ventana_tiquete():
+    generar_codigo_checkin()
+    ventana_resumen.withdraw()
+    nombre = nombre_completo()
+    ventana_tiquete = tk.Toplevel(root)
+    ventana_tiquete.title("SuperFly - Tiquete")
+    ventana_tiquete.geometry("1000x600")
+    ventana_tiquete.iconbitmap("SuperFly.ico") 
     # Create a frame for the airline logo
-    logo_frame = tk.Frame(root, bg="red")
+    logo_frame = tk.Frame(ventana_tiquete, bg="red")
     logo_frame.pack(side="left", fill="y")
 
     # Create the airline logo label
-    logo_label = tk.Label(logo_frame, text="Cheap Airline", font=("Arial", 24, "bold"), fg="white", bg="red")
+    logo_label = tk.Label(logo_frame, text="SuperFly", font=("Arial", 24, "bold"), fg="white", bg="red")
     logo_label.pack(pady=10)
 
     # Create a frame for the boarding pass details
-    boarding_pass_frame = tk.Frame(root, bg="white")
+    boarding_pass_frame = tk.Frame(ventana_tiquete, bg="white")
     boarding_pass_frame.pack(side="right", fill="both", expand=True)
 
     # Create the boarding pass header
@@ -882,7 +904,7 @@ def crear_ventana_tiquete(nombre, origen, numero_vuelo, fecha, destino, hora):
 
     # Create the passenger name entry
     passenger_name_entry = tk.Entry(passenger_details_frame, font=("Arial", 12))
-    passenger_name_entry.insert(0, "Alejandro Sierra")
+    passenger_name_entry.insert(0, nombre)
     passenger_name_entry.grid(row=0, column=1, sticky="w")
 
     # Create frames for the flight details
@@ -894,45 +916,45 @@ def crear_ventana_tiquete(nombre, origen, numero_vuelo, fecha, destino, hora):
     origin_label.grid(row=0, column=0, sticky="w")
 
     origin_entry = tk.Entry(flight_details_frame, font=("Arial", 12))
-    origin_entry.insert(0, "BOG")
+    origin_entry.insert(0, origen)
     origin_entry.grid(row=0, column=1, sticky="w")
 
     destination_label = tk.Label(flight_details_frame, text="Destino", font=("Arial", 12))
     destination_label.grid(row=1, column=0, sticky="w")
 
     destination_entry = tk.Entry(flight_details_frame, font=("Arial", 12))
-    destination_entry.insert(0, "CAR")
+    destination_entry.insert(0, destino)
     destination_entry.grid(row=1, column=1, sticky="w")
 
     flight_number_label = tk.Label(flight_details_frame, text="Vuelo", font=("Arial", 12))
     flight_number_label.grid(row=0, column=2, sticky="w")
 
     flight_number_entry = tk.Entry(flight_details_frame, font=("Arial", 12))
-    flight_number_entry.insert(0, "A 001")
+    flight_number_entry.insert(0, codigo[0])
     flight_number_entry.grid(row=0, column=3, sticky="w")
 
     date_label = tk.Label(flight_details_frame, text="Fecha", font=("Arial", 12))
     date_label.grid(row=1, column=2, sticky="w")
 
     date_entry = tk.Entry(flight_details_frame, font=("Arial", 12))
-    date_entry.insert(0, "20/06/2024")
+    date_entry.insert(0, entrada_fecha.get())
     date_entry.grid(row=1, column=3, sticky="w")
 
     time_label = tk.Label(flight_details_frame, text="Hora", font=("Arial", 12))
     time_label.grid(row=2, column=2, sticky="w")
 
     time_entry = tk.Entry(flight_details_frame, font=("Arial", 12))
-    time_entry.insert(0, "07:05 am")
+    time_entry.insert(0, hora_s[0])
     time_entry.grid(row=2, column=3, sticky="w")
-    # Llamar a la función crear_ventana_tiquete con los valores correspondientes
-    nombre = "John Doe"
-    origen = "BOG"
-    numero_vuelo = "SF123"
-    fecha = "2022-12-31"
-    destino = "CAR"
-    hora = "08:00"
 
-    crear_ventana_tiquete(nombre, origen, numero_vuelo, fecha, destino, hora)
+# Funcion para generar el codigo de check-ing y guardarlo en un archivo datos_checkin.txt el deberá ser un código único, generado automáticamente. La letra inicial del nombre del usuario y contará con 6 dígitos alfanuméricos.
+
+def generar_codigo_checkin():
+    nombre = nombre_registro()
+    codigo = nombre[0] + ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+    with open('datos_checkin.txt', 'a') as file:
+        file.write(f"{nombre},{codigo}\n")
+    return codigo
 
 
 # Iniciar el bucle principal de la aplicación
