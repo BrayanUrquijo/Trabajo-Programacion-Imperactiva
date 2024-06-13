@@ -804,10 +804,26 @@ def nueva_ventana_tarjeta():
 
     entrada_cvv = tk.Entry(marco_tarjeta)
     entrada_cvv.grid(row=4, column=1, padx=10, pady=5)
+    def validar_numero_tarjeta():
+        numero_tarjeta = entrada_numero_tarjeta.get()
+        if len(numero_tarjeta) != 16:
+            showwarning(title="Error", message="El número de tarjeta debe tener 16 dígitos")
+            return False
+        return True
 
+    def validar_cvv():
+        cvv = entrada_cvv.get()
+        if len(cvv) != 3:
+            showwarning(title="Error", message="El CVV debe tener 3 dígitos")
+            return False
+        return True
 
     # Botón de continuar
-    continuar_button = tk.Button(marco_tarjeta, text="Continuar", bg='red2', fg='black', command= lambda :  ventana_resumen_compra(texto_vuelo, leer_datos_personas, calcular_total_pagar))
+    def continuar():
+        if validar_numero_tarjeta() and validar_cvv():
+            ventana_resumen_compra(texto_vuelo, leer_datos_personas, calcular_total_pagar)
+
+    continuar_button = tk.Button(marco_tarjeta, text="Continuar", bg='red2', fg='black', command=continuar)
     continuar_button.grid(row=5, columnspan=3, pady=10)
 
 # Crear una ventana de resumen de compra que contiene el vuelo seleccionado por el usuario en la ventana de "mostrar_vuelos", el número de personas y el valor total a pagar
