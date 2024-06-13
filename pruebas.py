@@ -78,8 +78,8 @@ for i in range(len(matriz)):
 
 # for para encontrar en una linea de la matriz la ciudad de origen y destino seleccionada por el usuario y mandar la fecha
 
-ciudad_origen_seleccionada = "Cartagena"
-ciudad_destino_seleccionada = "Cali"
+ciudad_origen_seleccionada = "Cali"
+ciudad_destino_seleccionada = "Bogota"
 
 for i in range(len(matriz)):
     if ciudad_origen[i] == ciudad_origen_seleccionada and ciudad_destino[i] == ciudad_destino_seleccionada:
